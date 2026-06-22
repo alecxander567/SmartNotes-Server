@@ -30,7 +30,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
-        "https://smart-notes-application.netlify.app"
+        "https://smart-notes-application.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -60,9 +60,6 @@ client = genai.Client(api_key=GOOGLE_API_KEY)
 
 # Thread pool for text extraction
 executor = ThreadPoolExecutor(max_workers=4)
-
-
-# ============ Text Extraction ============
 
 
 def extract_text_from_pdf(file_content: bytes) -> str:
@@ -138,9 +135,6 @@ def extract_text(file_content: bytes, file_extension: str) -> str:
     return extractors[file_extension](file_content)
 
 
-# ============ Notes Generation ============
-
-
 async def generate_notes_with_gemini(text: str) -> str:
     try:
         if len(text) > 30000:
@@ -212,9 +206,6 @@ def generate_simple_notes(text: str) -> str:
     )
 
 
-# ============ Supabase Helpers ============
-
-
 async def upload_to_supabase_storage(file_content: bytes, filename: str) -> tuple:
     try:
         unique_filename = f"{uuid.uuid4()}_{filename}"
@@ -264,10 +255,7 @@ async def save_file_to_db(
         )
 
 
-# ============ Endpoints ============
-
-
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     return {
         "message": "File Upload & Notes API with Supabase",
