@@ -91,7 +91,7 @@ def extract_text_from_pptx(file_content: bytes) -> str:
         for slide in prs.slides:
             seen = set()
             for shape in slide.shapes:
-                if not hasattr(shape, "text_frame"):
+                if not shape.has_text_frame:
                     continue
                 for paragraph in shape.text_frame.paragraphs:
                     t = paragraph.text.strip()
